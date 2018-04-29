@@ -1,7 +1,16 @@
-class TodoStore {
-    todos = []
+import { observable, computed } from 'mobx'
 
-    get completedTodosCount() {
+export class Todo {
+    constructor({ title, date = Date.now() }) {
+        this.title = title
+        this.date = date
+    }
+}
+
+export default class TodoStore {
+    @observable todos = []
+
+    @computed get completedTodosCount() {
         return this.todos.filter(todo => todo.completed).length
     }
 
@@ -13,13 +22,15 @@ class TodoStore {
         } 
     }
 
-    addTodo(todo) {
+    addTodo({ title }) {
         this.todos.push({
-            ...todo,
+            title,
             assignee: null,
             completed: false
         })
     }
-}
 
-export default TodoStore
+    editTodo({ title }, i) {
+        this.todos[i].title = title
+    }
+}
